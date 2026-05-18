@@ -1,0 +1,118 @@
+/*
+  SideNav frame: dark outer shell (#202124) with inset panels.
+  Matches Figma frame 125-3920.
+
+  Blade SideNav widths (from SIDE_NAV_EXPANDED_L1_WIDTH_BASE / _XL tokens):
+    l  breakpoint (≥1024px): 240px
+    xl breakpoint (≥1280px): 264px
+
+  Mobile (<1024px): Blade renders SideNav as a Drawer — overrides below are skipped.
+*/
+
+:root {
+  --topnav-height: 56px;
+  --panel-gap: 8px;
+  --panel-radius: 12px;
+  --sidenav-width-l: 240px;
+  --sidenav-width-xl: 264px;
+}
+
+/* Dark outer shell — visible as the gap around both panels */
+body,
+#root {
+  background-color: #202124;
+  height: 100%;
+  margin: 0;
+}
+
+/* ── Desktop overrides — l breakpoint (≥1024px, SideNav = 240px) ── */
+@media (min-width: 1024px) {
+  /* Dark sidebar rail */
+  nav[class*="StyledSideNavContainer"] {
+    background-color: #202124 !important;
+  }
+
+  /* SideNav white card — rounds left corners only; flush with main content on right */
+  div[class*="StyledL1Menu"] {
+    margin-top: calc(var(--topnav-height) + var(--panel-gap)) !important;
+    margin-left: var(--panel-gap) !important;
+    margin-right: 0 !important;
+    margin-bottom: var(--panel-gap) !important;
+    width: calc(var(--sidenav-width-l) - var(--panel-gap)) !important;
+    border-radius: var(--panel-radius) 0 0 var(--panel-radius) !important;
+    height: calc(100vh - var(--topnav-height) - (var(--panel-gap) * 2)) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  /* L2 portal — dark shell background so it doesn't bleed through */
+  #blade-sidenav-l2,
+  div[class*="StyledL2PortalContainer"] {
+    background-color: #202124 !important;
+  }
+
+  /* Main content panel — fixed position to match SideNav card geometry */
+  .main-content-panel {
+    position: fixed;
+    top: calc(var(--topnav-height) + var(--panel-gap));
+    left: var(--sidenav-width-l);
+    right: var(--panel-gap);
+    bottom: var(--panel-gap);
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 0 var(--panel-radius) var(--panel-radius) 0;
+    background-color: #f5f6f8;
+    padding-top: 28px;
+  }
+
+  /* SideNav body — 28px top padding so content clears the rounded card top edge */
+  #blade-sidenav-l1 > div {
+    padding-top: 28px !important;
+  }
+
+  /*
+    Stats right card — gradient background on the Blade Card surface.
+    Card itself provides the correct border + shadow from Blade elevation.
+    The gradient overrides the background-color since Card doesn't support gradients natively.
+  */
+  .stats-card-right-wrap {
+    flex: 1;
+    height: 178px;
+    position: relative;
+  }
+
+  /* Card root fills the 178px wrapper */
+  .stats-card-right-wrap > div {
+    height: 100%;
+  }
+
+  /* CardRootweb__StyledCardRoot — the outer Card element */
+  .stats-card-right-wrap [class*="CardRootweb"] {
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* CardSurfaceweb__CardSurface — the surface that holds the background */
+  .stats-card-right-wrap [class*="CardSurfaceweb"] {
+    height: 100% !important;
+    background: linear-gradient(105deg, #f6f9fe 0%, #eaf0fc 40%, #dce7f9 70%, #ccd8f6 100%) !important;
+    overflow: hidden !important;
+  }
+
+  /* CardBody fills height so the absolute progress bar is pinned to bottom of card */
+  .stats-card-right-wrap [class*="CardBody"] {
+    height: 100% !important;
+    position: relative !important;
+  }
+}
+
+/* ── xl breakpoint (≥1280px, SideNav = 264px) ── */
+@media (min-width: 1280px) {
+  div[class*="StyledL1Menu"] {
+    width: calc(var(--sidenav-width-xl) - var(--panel-gap)) !important;
+  }
+
+  .main-content-panel {
+    left: var(--sidenav-width-xl);
+  }
+}
